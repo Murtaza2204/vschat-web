@@ -288,7 +288,7 @@ nav.wrap{
 }
 .gallery-track{
   display:flex;
-  gap:0;
+  gap:20px;
   width:max-content;
   will-change:transform;
   animation:galleryMarquee 34s linear infinite;

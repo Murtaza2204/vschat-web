@@ -152,16 +152,18 @@ function App() {
 
       const sequenceWidth = sequence.scrollWidth
       if (sequenceWidth > 0) {
+        const sequenceGap = 20
+        const marqueeDistance = sequenceWidth + sequenceGap
         const copiesNeeded = Math.max(
           3,
-          Math.ceil((gallery.clientWidth + sequenceWidth) / sequenceWidth),
+          Math.ceil((gallery.clientWidth + marqueeDistance) / marqueeDistance),
         )
 
         for (let i = 1; i < copiesNeeded; i += 1) {
           track.appendChild(sequence.cloneNode(true))
         }
 
-        track.style.setProperty('--marquee-distance', `${sequenceWidth}px`)
+        track.style.setProperty('--marquee-distance', `${marqueeDistance}px`)
       }
 
       gallery.dataset.marqueeReady = 'true'
