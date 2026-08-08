@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#000000" flood-opacity=".12"/>
+    </filter>
+    <linearGradient id="greenGrad" x1="190" y1="250" x2="365" y2="250" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7EE300"/>
+      <stop offset="1" stop-color="#2BCB3F"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="#ffffff"/>
+  <rect x="16" y="16" width="480" height="480" rx="108" stroke="#000000" stroke-width="16"/>
+  <g filter="url(#softShadow)">
+    <path d="M152 282C152 183.588 231.588 104 330 104C428.412 104 508 183.588 508 282C508 368.404 447.359 440.126 366 456.135V456.5H336.5L288.8 483.2C282.3 486.8 274 482.1 274 474.6V456.1C197.86 443.7 152 375.4 152 282Z" fill="white" stroke="#111111" stroke-width="18" stroke-linejoin="round"/>
+  </g>
+  <path d="M177 177H226L266 286L307 177H357L279 351H223L177 177Z" fill="#111111"/>
+  <path d="M270 324C287 255 357 250 370 205H319C282 205 256 224 244 245C230 270 232 299 236 316C243 348 274 364 309 364H353C385 364 411 354 428 335C450 311 449 279 442 257C438 244 431 229 422 218L372 250C380 258 385 267 386 279C387 297 372 314 345 314H306C289 314 277 319 270 324Z" fill="url(#greenGrad)"/>
+  <circle cx="230" cy="390" r="16" fill="#51C522"/>
+  <circle cx="274" cy="390" r="16" fill="#51C522"/>
+  <circle cx="318" cy="390" r="16" fill="#51C522"/>
+</svg>

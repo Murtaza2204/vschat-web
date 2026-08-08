@@ -174,24 +174,37 @@ function App() {
       })
     })
 
-    gsap.utils.toArray('.feat-card').forEach((element, index) => {
-      gsap.fromTo(
-        element,
-        { opacity: 0, y: 50, rotateX: 8 },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          delay: (index % 4) * 0.08,
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 88%',
-          },
-        },
-      )
+    const featureGrid = document.querySelector('.feat-grid')
+    const featureCards = Array.from(document.querySelectorAll('.feat-card'))
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    featureCards.forEach((card, index) => {
+      card.style.setProperty('--feat-delay', `${80 + index * 100}ms`)
     })
+
+    if (featureGrid) {
+      if (reduceMotion) {
+        featureGrid.classList.add('is-visible')
+      } else {
+        const featureObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                featureGrid.classList.add('is-visible')
+                observer.disconnect()
+              }
+            })
+          },
+          {
+            threshold: 0.22,
+            rootMargin: '0px 0px -10% 0px',
+          },
+        )
+
+        featureObserver.observe(featureGrid)
+        cleanupFns.push(() => featureObserver.disconnect())
+      }
+    }
 
     const originalPhoneMarkup = gallery
       ? Array.from(gallery.querySelectorAll(':scope > .mini-phone')).map((node) => node.outerHTML)
@@ -597,33 +610,6 @@ function App() {
     hero?.addEventListener('mouseleave', handleHeroLeave)
     stage?.addEventListener('mousemove', handleStageMove)
     stage?.addEventListener('mouseleave', handleStageLeave)
-
-    document.querySelectorAll('.feat-card').forEach((card) => {
-      const handleMove = (event) => {
-        const rect = card.getBoundingClientRect()
-        const x = (event.clientX - rect.left) / rect.width - 0.5
-        const y = (event.clientY - rect.top) / rect.height - 0.5
-
-        gsap.to(card, {
-          rotateY: x * 10,
-          rotateX: -y * 10,
-          duration: 0.4,
-          ease: 'power2.out',
-          transformPerspective: 600,
-        })
-      }
-
-      const handleLeave = () => {
-        gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power3.out' })
-      }
-
-      card.addEventListener('mousemove', handleMove)
-      card.addEventListener('mouseleave', handleLeave)
-      cleanupFns.push(() => {
-        card.removeEventListener('mousemove', handleMove)
-        card.removeEventListener('mouseleave', handleLeave)
-      })
-    })
 
     document.querySelectorAll('.magnetic').forEach((button) => {
       const handleMove = (event) => {
