@@ -125,6 +125,60 @@ function App() {
       )
     })
 
+    const originalPhoneMarkup = gallery
+      ? Array.from(gallery.querySelectorAll(':scope > .mini-phone')).map((node) => node.outerHTML)
+      : []
+    let marqueeBuildId = 0
+
+    const buildMarquee = () => {
+      if (!gallery || originalPhoneMarkup.length === 0) {
+        return
+      }
+
+      marqueeBuildId += 1
+      const buildVersion = marqueeBuildId
+
+      delete gallery.dataset.marqueeReady
+      gallery.innerHTML = ''
+
+      const track = document.createElement('div')
+      track.className = 'gallery-track'
+
+      const sequence = document.createElement('div')
+      sequence.className = 'gallery-seq'
+      sequence.innerHTML = originalPhoneMarkup.join('')
+      track.appendChild(sequence)
+      gallery.appendChild(track)
+
+      const sequenceWidth = sequence.scrollWidth
+      if (sequenceWidth > 0) {
+        const copiesNeeded = Math.max(
+          3,
+          Math.ceil((gallery.clientWidth + sequenceWidth) / sequenceWidth),
+        )
+
+        for (let i = 1; i < copiesNeeded; i += 1) {
+          track.appendChild(sequence.cloneNode(true))
+        }
+
+        track.style.setProperty('--marquee-distance', `${sequenceWidth}px`)
+      }
+
+      gallery.dataset.marqueeReady = 'true'
+      track.dataset.buildVersion = String(buildVersion)
+    }
+
+    buildMarquee()
+
+    const handleMarqueeResize = () => {
+      buildMarquee()
+    }
+
+    window.addEventListener('resize', handleMarqueeResize)
+    cleanupFns.push(() => {
+      window.removeEventListener('resize', handleMarqueeResize)
+    })
+
     gsap.utils.toArray('.mini-phone').forEach((element, index) => {
       gsap.fromTo(
         element,
@@ -144,34 +198,12 @@ function App() {
       )
     })
 
-    if (gallery && !gallery.dataset.marqueeReady) {
-      const originalPhones = Array.from(gallery.querySelectorAll(':scope > .mini-phone'))
-      if (originalPhones.length > 0) {
-        const originalClones = originalPhones.map((node) => node.cloneNode(true))
-        const track = document.createElement('div')
-        track.className = 'gallery-track'
-
-        originalPhones.forEach((phoneNode) => {
-          track.appendChild(phoneNode)
-        })
-
-        originalClones.forEach((phoneNode) => {
-          track.appendChild(phoneNode)
-        })
-
-        gallery.textContent = ''
-        gallery.appendChild(track)
-        gallery.dataset.marqueeReady = 'true'
-
-        cleanupFns.push(() => {
-          delete gallery.dataset.marqueeReady
-          gallery.textContent = ''
-          originalPhones.forEach((phoneNode) => {
-            gallery.appendChild(phoneNode)
-          })
-        })
+    cleanupFns.push(() => {
+      if (gallery) {
+        delete gallery.dataset.marqueeReady
+        gallery.innerHTML = originalPhoneMarkup.join('')
       }
-    }
+    })
 
     document.querySelectorAll('.num').forEach((num) => {
       const target = Number(num.dataset.target || 0)

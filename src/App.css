@@ -288,10 +288,15 @@ nav.wrap{
 }
 .gallery-track{
   display:flex;
-  gap:20px;
+  gap:0;
   width:max-content;
   will-change:transform;
   animation:galleryMarquee 34s linear infinite;
+}
+.gallery-seq{
+  display:flex;
+  gap:20px;
+  flex:0 0 auto;
 }
 .gallery-scroll::-webkit-scrollbar{height:6px;}
 .gallery-scroll::-webkit-scrollbar-thumb{background:#c7cede; border-radius:10px;}
@@ -331,7 +336,7 @@ nav.wrap{
 
 @keyframes galleryMarquee{
   from{transform:translate3d(0, 0, 0);}
-  to{transform:translate3d(calc(-50% - 10px), 0, 0);}
+  to{transform:translate3d(calc(-1 * var(--marquee-distance, 50%)), 0, 0);}
 }
 
 @keyframes subtleFloat{
