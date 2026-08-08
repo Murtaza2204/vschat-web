@@ -5,6 +5,17 @@ import { vschatMarkup } from './vschatMarkup'
 import './App.css'
 
 function App() {
+  const renderedMarkup = vschatMarkup.replace(
+    `<li><a href="#about">About</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>`,
+    `<li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#about">About</a></li>`,
+  ).replace(
+    `<li><a href="#company">Company</a></li>
+      <li><a href="#contact">Contact</a></li>`,
+    `<li><a href="#contact">Contact</a></li>`,
+  )
+
   useEffect(() => {
     document.title = 'VSChat - Connect. Chat. Communicate.'
   }, [])
@@ -665,7 +676,7 @@ function App() {
     }
   }, [])
 
-  return <div dangerouslySetInnerHTML={{ __html: vschatMarkup }} />
+  return <div dangerouslySetInnerHTML={{ __html: renderedMarkup }} />
 }
 
 export default App
