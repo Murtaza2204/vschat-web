@@ -22,6 +22,7 @@ function App() {
     const phone = document.getElementById('phone')
     const spotlight = document.getElementById('spotlight')
     const gallery = document.querySelector('.gallery-scroll')
+    const aboutImg = document.querySelector('.about-img')
     const cleanupFns = []
 
     const syncProgress = () => {
@@ -128,6 +129,7 @@ function App() {
     const originalPhoneMarkup = gallery
       ? Array.from(gallery.querySelectorAll(':scope > .mini-phone')).map((node) => node.outerHTML)
       : []
+    const originalAboutMarkup = aboutImg ? aboutImg.innerHTML : ''
     let marqueeBuildId = 0
 
     const buildMarquee = () => {
@@ -171,6 +173,55 @@ function App() {
     }
 
     buildMarquee()
+
+    if (aboutImg) {
+      aboutImg.innerHTML = `
+        <div class="holo-scene">
+          <div class="holo-glow"></div>
+          <div class="holo-rings">
+            <span class="holo-ring ring-1"></span>
+            <span class="holo-ring ring-2"></span>
+            <span class="holo-ring ring-3"></span>
+          </div>
+          <div class="holo-card holo-card-left">
+            <span class="mini-pill"><span class="mini-dot"></span> Live sync</span>
+            <strong>1.2k active threads</strong>
+            <small>Messages flowing in real time</small>
+          </div>
+          <div class="holo-card holo-card-right">
+            <span class="mini-pill alt"><span class="mini-dot"></span> Encrypted</span>
+            <strong>Private by design</strong>
+            <small>End-to-end security at every layer</small>
+          </div>
+          <div class="holo-device">
+            <div class="holo-device-shell">
+              <div class="holo-device-screen">
+                <div class="holo-topbar">
+                  <span>VSChat Cloud</span>
+                  <span class="holo-status"><span class="status-dot"></span>Online</span>
+                </div>
+                <div class="holo-orb">
+                  <span class="orb orb-a"></span>
+                  <span class="orb orb-b"></span>
+                  <span class="orb orb-c"></span>
+                  <span class="orb orb-d"></span>
+                </div>
+                <div class="holo-bars">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      cleanupFns.push(() => {
+        if (aboutImg) {
+          aboutImg.innerHTML = originalAboutMarkup
+        }
+      })
+    }
 
     const handleMarqueeResize = () => {
       buildMarquee()
