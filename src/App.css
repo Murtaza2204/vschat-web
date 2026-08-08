@@ -1043,19 +1043,21 @@ nav.wrap{
   background:#e8f8ef;
   color:var(--green-dark);
   display:flex;
-  align-items:center;
-  justify-content:center;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:10px 0 0 10px;
   border:1px solid #c8efd8;
   box-shadow:0 14px 26px -20px rgba(34,197,94,.4);
 }
 .contact-point-icon svg{
-  width:26px;
-  height:26px;
+  width:24px;
+  height:24px;
   fill:none;
   stroke:currentColor;
   stroke-width:2;
   stroke-linecap:round;
   stroke-linejoin:round;
+  display:block;
 }
 .contact-point strong{
   display:block;
@@ -1622,6 +1624,19 @@ footer{padding:70px 0 30px;}
   background:
     radial-gradient(circle at 50% 30%, rgba(34,197,94,.22), transparent 42%),
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 55%);
+}
+:root[data-theme='dark'] .contact-section{
+  background:linear-gradient(180deg,#06101f 0%, #091625 100%);
+}
+:root[data-theme='dark'] .contact-section::before{
+  background:
+    radial-gradient(circle at 72% 42%, rgba(34,197,94,.12), transparent 18%),
+    radial-gradient(circle at 79% 48%, rgba(34,197,94,.08), transparent 24%),
+    radial-gradient(circle at 72% 44%, rgba(34,197,94,.06), transparent 34%),
+    linear-gradient(180deg, rgba(6,16,31,.96), rgba(9,22,37,.92));
+}
+:root[data-theme='dark'] .contact-layout{
+  background:transparent;
 }
 :root[data-theme='dark'] .contact-phone-screen{
   background:
