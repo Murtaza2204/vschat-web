@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+﻿import { useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { vschatMarkup } from './vschatMarkup'
@@ -10,19 +10,86 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const root = document.documentElement
+    const storageKey = 'vschat-theme'
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const savedTheme = window.localStorage.getItem(storageKey)
+    const initialTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : (prefersDark ? 'dark' : 'light')
+
+    const applyTheme = (theme) => {
+      root.dataset.theme = theme
+      root.style.colorScheme = theme
+      window.localStorage.setItem(storageKey, theme)
+    }
+
+    applyTheme(initialTheme)
+
+    const nav = document.querySelector('nav.wrap')
+    const downloadButton = nav?.querySelector('.btn.btn-primary.magnetic')
+
+    if (!nav || !downloadButton) {
+      return undefined
+    }
+
+    const themeToggle = document.createElement('button')
+    themeToggle.type = 'button'
+    themeToggle.className = 'btn theme-toggle magnetic'
+
+    const renderToggle = (theme) => {
+      const isDark = theme === 'dark'
+      themeToggle.innerHTML = isDark
+        ? `
+          <span class="theme-toggle-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.7A8.6 8.6 0 1 1 11.3 3 7 7 0 0 0 21 12.7Z"/>
+            </svg>
+          </span>
+          <span class="theme-toggle-label">Light Mode</span>
+        `
+        : `
+          <span class="theme-toggle-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </span>
+          <span class="theme-toggle-label">Dark Mode</span>
+        `
+      themeToggle.setAttribute('aria-pressed', String(isDark))
+    }
+
+    let currentTheme = initialTheme
+    renderToggle(currentTheme)
+    downloadButton.insertAdjacentElement('afterend', themeToggle)
+
+    const handleToggle = () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark'
+      applyTheme(currentTheme)
+      renderToggle(currentTheme)
+    }
+
+    themeToggle.addEventListener('click', handleToggle)
+
+    return () => {
+      themeToggle.removeEventListener('click', handleToggle)
+      themeToggle.remove()
+    }
+  }, [])
+
+  useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
     const root = document.documentElement
     const progressBar = document.getElementById('progressBar')
     const header = document.getElementById('siteHeader')
-    const sections = document.querySelectorAll('section[id]')
+    const getSections = () => document.querySelectorAll('section[id]')
     const navLinks = document.querySelectorAll('.nav-links a')
     const hero = document.querySelector('.hero')
     const stage = document.getElementById('stage')
     const phone = document.getElementById('phone')
     const spotlight = document.getElementById('spotlight')
     const gallery = document.querySelector('.gallery-scroll')
-    const aboutImg = document.querySelector('.about-img')
+    const footer = document.querySelector('footer')
     const cleanupFns = []
 
     const syncProgress = () => {
@@ -46,7 +113,7 @@ function App() {
     const syncActiveLink = () => {
       let current = ''
 
-      sections.forEach((section) => {
+      getSections().forEach((section) => {
         const top = section.offsetTop - 120
         if (window.scrollY >= top) {
           current = section.id
@@ -129,7 +196,6 @@ function App() {
     const originalPhoneMarkup = gallery
       ? Array.from(gallery.querySelectorAll(':scope > .mini-phone')).map((node) => node.outerHTML)
       : []
-    const originalAboutMarkup = aboutImg ? aboutImg.innerHTML : ''
     let marqueeBuildId = 0
 
     const buildMarquee = () => {
@@ -174,55 +240,217 @@ function App() {
 
     buildMarquee()
 
-    if (aboutImg) {
-      aboutImg.innerHTML = `
-        <div class="holo-scene">
-          <div class="holo-glow"></div>
-          <div class="holo-rings">
-            <span class="holo-ring ring-1"></span>
-            <span class="holo-ring ring-2"></span>
-            <span class="holo-ring ring-3"></span>
-          </div>
-          <div class="holo-card holo-card-left">
-            <span class="mini-pill"><span class="mini-dot"></span> Live sync</span>
-            <strong>1.2k active threads</strong>
-            <small>Messages flowing in real time</small>
-          </div>
-          <div class="holo-card holo-card-right">
-            <span class="mini-pill alt"><span class="mini-dot"></span> Encrypted</span>
-            <strong>Private by design</strong>
-            <small>End-to-end security at every layer</small>
-          </div>
-          <div class="holo-device">
-            <div class="holo-device-shell">
-              <div class="holo-device-screen">
-                <div class="holo-topbar">
-                  <span>VSChat Cloud</span>
-                  <span class="holo-status"><span class="status-dot"></span>Online</span>
+    if (footer) {
+      const originalFooterId = footer.id
+      footer.id = 'footer'
+
+      const contactSection = document.createElement('section')
+      contactSection.className = 'section contact-section'
+      contactSection.id = 'contact'
+      contactSection.innerHTML = `
+        <div class="wrap contact-layout">
+          <div class="contact-copy reveal">
+            <span class="eyebrow"><span class="dot"></span> Contact VSChat</span>
+            <h2>Leave a<br><span class="contact-accent">message here</span></h2>
+            <p>Tell us what you need, and our team will reply with a thoughtful, quick response.</p>
+            <div class="contact-points">
+              <div class="contact-point">
+                <span class="contact-point-icon"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></svg></span>
+                <div>
+                  <strong>Friendly support when you need it</strong>
+                  <span>We’re here to help with a human touch.</span>
                 </div>
-                <div class="holo-orb">
-                  <span class="orb orb-a"></span>
-                  <span class="orb orb-b"></span>
-                  <span class="orb orb-c"></span>
-                  <span class="orb orb-d"></span>
+              </div>
+              <div class="contact-point">
+                <span class="contact-point-icon"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+                <div>
+                  <strong>Fast replies across chat and email</strong>
+                  <span>Get quick answers, wherever you reach us.</span>
                 </div>
-                <div class="holo-bars">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+              </div>
+              <div class="contact-point">
+                <span class="contact-point-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                <div>
+                  <strong>Built to feel native on mobile</strong>
+                  <span>A seamless experience, just like the app.</span>
+                </div>
+              </div>
+            </div>
+            <div class="contact-privacy">
+              <div class="contact-privacy-badge">
+                <span class="contact-privacy-shield"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.5 3.7 10.5 8 11 4.3-.5 8-5.5 8-11V5l-8-3z"/><path d="m9.5 12.5 2 2 3.8-4"/></svg></span>
+              </div>
+              <div class="contact-privacy-copy">
+                <strong>Your privacy is important</strong>
+                <p>Your information is safe and never shared.</p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-mobile reveal">
+            <div class="contact-orbit orbit-a"></div>
+            <div class="contact-orbit orbit-b"></div>
+            <div class="contact-glow"></div>
+            <div class="contact-float chip-left">
+              <span class="mini-pill"><span class="mini-dot"></span></span>
+            </div>
+            <div class="contact-float chip-right">
+              <span class="mini-pill alt"><span class="mini-dot"></span></span>
+            </div>
+            <div class="contact-float chip-topright">
+              <span class="mini-pill arrow"><span class="mini-send"></span></span>
+            </div>
+            <div class="contact-phone">
+              <div class="contact-phone-shell">
+                <div class="contact-phone-screen">
+                  <div class="contact-statusbar">
+                    <span>9:41</span>
+                    <span class="contact-status-icons">
+                      <span class="contact-signal"></span>
+                      <span class="contact-wifi"></span>
+                      <span class="contact-battery"></span>
+                    </span>
+                  </div>
+                  <div class="contact-top">
+                    <button type="button" class="contact-back" aria-label="Back">
+                      <span class="icon"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></span>
+                    </button>
+                    <div class="contact-brand"><span>VS</span>Chat</div>
+                    <div class="contact-spacer"></div>
+                  </div>
+                  <div class="contact-hero-mobile">
+                    <h3>Contact Us</h3>
+                    <p>We’d love to hear from you.</p>
+                  </div>
+                  <div class="contact-art">
+                    <div class="contact-art-ring"></div>
+                    <div class="contact-art-ring contact-art-ring-outer"></div>
+                    <div class="contact-art-icon">
+                      <span class="contact-art-bubble"></span>
+                      <span class="contact-art-headset"></span>
+                    </div>
+                  </div>
+                  <form class="contact-form contact-form-mobile">
+                    <label class="contact-field-wrap">
+                      <span>Your Name</span>
+                      <div class="contact-field contact-input contact-field-row">
+                        <span class="contact-field-icon"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+                        <input type="text" placeholder="Your Name" />
+                      </div>
+                    </label>
+                    <label class="contact-field-wrap">
+                      <span>Your Email</span>
+                      <div class="contact-field contact-input contact-field-row">
+                        <span class="contact-field-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+                        <input type="email" placeholder="Your Email" />
+                      </div>
+                    </label>
+                    <label class="contact-field-wrap">
+                      <span>Your Message</span>
+                      <div class="contact-field contact-field-lg contact-textarea contact-message-row">
+                        <span class="contact-field-icon contact-field-icon-top"><svg viewBox="0 0 24 24"><path d="M13.5 6.5 5 15l-1 5 5-1 8.5-8.5z"/><path d="m12 8 4 4"/></svg></span>
+                        <textarea rows="5" placeholder="Your Message"></textarea>
+                      </div>
+                    </label>
+                    <button type="button" class="contact-send contact-send-large">
+                      <span class="contact-send-icon"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>
+                      Send Message
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
       `
-      cleanupFns.push(() => {
-        if (aboutImg) {
-          aboutImg.innerHTML = originalAboutMarkup
+      const companySection = document.querySelector('#company')
+      if (companySection?.parentElement) {
+        companySection.parentElement.insertBefore(contactSection, companySection)
+      } else {
+        footer.parentElement.insertBefore(contactSection, footer)
+      }
+
+      const contactForm = contactSection.querySelector('.contact-form')
+      const contactPhone = contactSection.querySelector('.contact-phone')
+      const contactSuccess = contactSection.querySelector('.contact-success')
+      const contactSend = contactSection.querySelector('.contact-send')
+      const contactFields = Array.from(contactSection.querySelectorAll('.contact-field-wrap'))
+      let contactSuccessTimer = null
+
+      const syncContactFields = () => {
+        contactFields.forEach((field) => {
+          const input = field.querySelector('input, textarea')
+          field.classList.toggle('filled', Boolean(input?.value.trim()))
+        })
+      }
+
+      const handleContactInput = () => {
+        syncContactFields()
+      }
+
+      const handleContactFocusIn = () => {
+        contactPhone?.classList.add('is-active')
+      }
+
+      const handleContactFocusOut = (event) => {
+        const nextTarget = event.relatedTarget
+        if (!contactForm?.contains(nextTarget)) {
+          contactPhone?.classList.remove('is-active')
         }
+      }
+
+      const handleContactSend = () => {
+        if (!contactSuccess) {
+          return
+        }
+
+        contactSuccess.classList.add('is-flash')
+        gsap.fromTo(
+          contactSuccess,
+          { opacity: 0.6, y: 10, scale: 0.98 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out' },
+        )
+
+        if (contactSuccessTimer) {
+          window.clearTimeout(contactSuccessTimer)
+        }
+
+        contactSuccessTimer = window.setTimeout(() => {
+          contactSuccess.classList.remove('is-flash')
+        }, 1200)
+      }
+
+      contactForm?.addEventListener('input', handleContactInput)
+      contactForm?.addEventListener('focusin', handleContactFocusIn)
+      contactForm?.addEventListener('focusout', handleContactFocusOut)
+      contactSend?.addEventListener('click', handleContactSend)
+      syncContactFields()
+
+      const contactRevealItems = contactSection.querySelectorAll('.reveal')
+      gsap.fromTo(
+        contactRevealItems,
+        { opacity: 0, y: 42 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          stagger: 0.12,
+          delay: 0.05,
+        },
+      )
+
+      cleanupFns.push(() => {
+        contactForm?.removeEventListener('input', handleContactInput)
+        contactForm?.removeEventListener('focusin', handleContactFocusIn)
+        contactForm?.removeEventListener('focusout', handleContactFocusOut)
+        contactSend?.removeEventListener('click', handleContactSend)
+        if (contactSuccessTimer) {
+          window.clearTimeout(contactSuccessTimer)
+        }
+        contactSection.remove()
+        footer.id = originalFooterId
       })
     }
-
     const handleMarqueeResize = () => {
       buildMarquee()
     }
@@ -455,3 +683,4 @@ function App() {
 }
 
 export default App
+
