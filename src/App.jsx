@@ -14,6 +14,15 @@ function App() {
     `<li><a href="#company">Company</a></li>
       <li><a href="#contact">Contact</a></li>`,
     `<li><a href="#contact">Contact</a></li>`,
+  ).replace(
+    `<div><h5>Product</h5><ul><li><a href="#">Features</a></li><li><a href="#">Screenshots</a></li><li><a href="#">Download</a></li></ul></div>`,
+    ``,
+  ).replace(
+    `<div><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Company</a></li><li><a href="#">Contact</a></li></ul></div>`,
+    `<div><h5>Quick Links</h5><ul><li><a href="#home">Home</a></li><li><a href="#features">Features</a></li><li><a href="#screenshots">Screenshots</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>`,
+  ).replace(
+    `<div><h5>Legal</h5><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li></ul></div>`,
+    ``,
   )
 
   useEffect(() => {
