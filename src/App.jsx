@@ -21,6 +21,7 @@ function App() {
     const stage = document.getElementById('stage')
     const phone = document.getElementById('phone')
     const spotlight = document.getElementById('spotlight')
+    const gallery = document.querySelector('.gallery-scroll')
     const cleanupFns = []
 
     const syncProgress = () => {
@@ -142,6 +143,35 @@ function App() {
         },
       )
     })
+
+    if (gallery && !gallery.dataset.marqueeReady) {
+      const originalPhones = Array.from(gallery.querySelectorAll(':scope > .mini-phone'))
+      if (originalPhones.length > 0) {
+        const originalClones = originalPhones.map((node) => node.cloneNode(true))
+        const track = document.createElement('div')
+        track.className = 'gallery-track'
+
+        originalPhones.forEach((phoneNode) => {
+          track.appendChild(phoneNode)
+        })
+
+        originalClones.forEach((phoneNode) => {
+          track.appendChild(phoneNode)
+        })
+
+        gallery.textContent = ''
+        gallery.appendChild(track)
+        gallery.dataset.marqueeReady = 'true'
+
+        cleanupFns.push(() => {
+          delete gallery.dataset.marqueeReady
+          gallery.textContent = ''
+          originalPhones.forEach((phoneNode) => {
+            gallery.appendChild(phoneNode)
+          })
+        })
+      }
+    }
 
     document.querySelectorAll('.num').forEach((num) => {
       const target = Number(num.dataset.target || 0)
