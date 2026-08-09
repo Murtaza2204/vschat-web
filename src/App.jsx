@@ -23,6 +23,9 @@ function App() {
   ).replace(
     `<div><h5>Legal</h5><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li></ul></div>`,
     ``,
+  ).replace(
+    `<p>Connect. Chat. Communicate.</p>`,
+    `<p>Connect, chat, and communicate with ease using VSChat, a simple and secure platform built to keep people closer every day.</p>`,
   )
 
   useEffect(() => {
