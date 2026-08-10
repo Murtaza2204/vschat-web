@@ -688,6 +688,191 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const featuresSection = document.getElementById('features')
+    const sectionHead = featuresSection?.querySelector('.section-head')
+    const featGrid = featuresSection?.querySelector('.feat-grid')
+
+    if (!featuresSection || !sectionHead || !featGrid) {
+      return undefined
+    }
+
+    const originalParent = featGrid.parentElement
+    const originalNextSibling = featGrid.nextSibling
+    const createdNodes = []
+
+    featuresSection.classList.add('features-section')
+    sectionHead.classList.add('features-head')
+
+    let layout = featuresSection.querySelector('.features-layout')
+    if (!layout) {
+      layout = document.createElement('div')
+      layout.className = 'features-layout'
+      sectionHead.insertAdjacentElement('afterend', layout)
+      createdNodes.push(layout)
+    }
+
+    let spotlight = featuresSection.querySelector('.feature-spotlight')
+    if (!spotlight) {
+      spotlight = document.createElement('div')
+      spotlight.className = 'feature-spotlight reveal'
+      spotlight.innerHTML = `
+        <div class="feature-spotlight-orbit orbit-one" aria-hidden="true"></div>
+        <div class="feature-spotlight-orbit orbit-two" aria-hidden="true"></div>
+        <div class="feature-spotlight-stage">
+          <div class="feature-spotlight-copy">
+            <span class="feature-kicker"><span class="feature-kicker-dot"></span> Live Conversation</span>
+            <h3>Messages that feel alive, not static</h3>
+            <p>Messages drift out of the interface with subtle motion, while call and media cues glow around the conversation.</p>
+            <div class="feature-mini-row">
+              <span class="feature-mini-chip"><span></span>Instant</span>
+              <span class="feature-mini-chip"><span></span>Secure</span>
+              <span class="feature-mini-chip"><span></span>Cross-device</span>
+            </div>
+          </div>
+          <div class="feature-spotlight-visual">
+            <span class="feature-flow flow-a" aria-hidden="true"></span>
+            <span class="feature-flow flow-b" aria-hidden="true"></span>
+            <span class="feature-flow flow-c" aria-hidden="true"></span>
+            <span class="feature-bubble bubble-chat" aria-hidden="true">Instant messaging</span>
+            <span class="feature-bubble bubble-call" aria-hidden="true">Crystal clear calls</span>
+            <span class="feature-bubble bubble-video" aria-hidden="true">HD video</span>
+            <span class="feature-bubble bubble-secure" aria-hidden="true">End-to-end secure</span>
+            <span class="feature-bubble bubble-media" aria-hidden="true">Media sharing</span>
+            <div class="feature-phone" aria-hidden="true">
+              <div class="feature-phone-shell">
+                <div class="feature-phone-screen">
+                  <div class="feature-statusbar">
+                    <span>10:37</span>
+                    <span class="feature-status-icons">
+                      <span class="feature-signal"></span>
+                      <span class="feature-wifi"></span>
+                      <span class="feature-battery"></span>
+                    </span>
+                  </div>
+                  <div class="feature-chat-title">
+                    <span class="feature-chat-dot"></span>
+                    VSChat
+                  </div>
+                  <div class="feature-chat-stack">
+                    <div class="feature-message in">Emma: Hey! How are you? <span>💬</span></div>
+                    <div class="feature-message out">You: Doing great! <span>🚀</span></div>
+                    <div class="feature-message in">Emma: Want to jump on a call? <span>📞</span></div>
+                    <div class="feature-message out">You: Sure, let me get ready. <span>✨</span></div>
+                    <div class="feature-message in">Emma: I can share the photo too. <span>📷</span></div>
+                    <div class="feature-message out feature-call-row">
+                      <span>Voice Call</span>
+                      <span>Video Call</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      createdNodes.push(spotlight)
+    }
+
+    if (spotlight.parentElement !== layout) {
+      layout.appendChild(spotlight)
+    }
+
+    if (featGrid.parentElement !== layout) {
+      layout.appendChild(featGrid)
+    } else if (spotlight.nextSibling !== featGrid) {
+      layout.insertBefore(featGrid, spotlight.nextSibling)
+    }
+
+    layout.classList.add('is-ready')
+
+    const featureCards = Array.from(featGrid.querySelectorAll('.feat-card'))
+    const featureSectionTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: featuresSection,
+        start: 'top 78%',
+      },
+    })
+
+    featureSectionTl.fromTo(
+      spotlight,
+      { opacity: 0, y: 36, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'power3.out' },
+      0,
+    )
+    featureSectionTl.fromTo(
+      featureCards,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' },
+      0.06,
+    )
+
+    featureSectionTl.fromTo(
+      spotlight.querySelectorAll('.feature-spotlight-copy > *, .feature-bubble, .feature-flow, .feature-phone'),
+      { opacity: 0, y: 20, scale: 0.98 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.08,
+        ease: 'power3.out',
+      },
+      0.16,
+    )
+
+    featureSectionTl.fromTo(
+      spotlight.querySelectorAll('.feature-message'),
+      { opacity: 0, y: 16 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.55,
+        stagger: 0.28,
+        ease: 'power2.out',
+      },
+      0.5,
+    )
+
+    const driftTargets = featuresSection.querySelectorAll('.features-glow, .feature-spotlight-orbit')
+    driftTargets.forEach((node, index) => {
+      gsap.to(node, {
+        y: index % 2 === 0 ? 18 : -18,
+        x: index % 2 === 0 ? -8 : 8,
+        duration: 5 + index,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      })
+    })
+
+    return () => {
+      featureSectionTl.scrollTrigger?.kill()
+      featureSectionTl.kill()
+      driftTargets.forEach((node) => gsap.killTweensOf(node))
+
+      if (spotlight?.parentElement === layout) {
+        layout.removeChild(spotlight)
+      }
+
+      if (layout?.parentElement === featuresSection) {
+        featuresSection.insertBefore(featGrid, originalNextSibling)
+        layout.remove()
+      } else if (originalParent && featGrid.parentElement !== originalParent) {
+        originalParent.insertBefore(featGrid, originalNextSibling)
+      }
+
+      createdNodes.forEach((node) => {
+        if (node.parentElement) {
+          node.remove()
+        }
+      })
+
+      featuresSection.classList.remove('features-section')
+      sectionHead.classList.remove('features-head')
+    }
+  }, [])
+
   return <div dangerouslySetInnerHTML={{ __html: renderedMarkup }} />
 }
 
