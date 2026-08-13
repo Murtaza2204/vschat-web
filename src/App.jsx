@@ -15,6 +15,15 @@ function App() {
       <li><a href="#contact">Contact</a></li>`,
     `<li><a href="#contact">Contact</a></li>`,
   ).replace(
+    `<button class="btn btn-primary magnetic">Download App <span class="icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span></button>`,
+    ``,
+  ).replace(
+    `<button class="btn btn-primary magnetic">Get Started <span class="icon icon-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></button>`,
+    `<button type="button" class="btn btn-primary magnetic" data-cta="get-started" aria-haspopup="dialog" aria-controls="product-tour">Get Started <span class="icon icon-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></button>`,
+  ).replace(
+    `<button class="btn btn-ghost magnetic"><span class="icon icon-play"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> Explore Features</button>`,
+    `<button type="button" class="btn btn-ghost magnetic" data-cta="explore-features"><span class="icon icon-play"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> Explore Features</button>`,
+  ).replace(
     `<div><h5>Product</h5><ul><li><a href="#">Features</a></li><li><a href="#">Screenshots</a></li><li><a href="#">Download</a></li></ul></div>`,
     ``,
   ).replace(
@@ -48,9 +57,9 @@ function App() {
     applyTheme(initialTheme)
 
     const nav = document.querySelector('nav.wrap')
-    const downloadButton = nav?.querySelector('.btn.btn-primary.magnetic')
+    const navAnchor = nav?.querySelector('.nav-links') ?? nav?.querySelector('.logo')
 
-    if (!nav || !downloadButton) {
+    if (!nav || !navAnchor) {
       return undefined
     }
 
@@ -83,7 +92,7 @@ function App() {
 
     let currentTheme = initialTheme
     renderToggle(currentTheme)
-    downloadButton.insertAdjacentElement('afterend', themeToggle)
+    navAnchor.insertAdjacentElement('afterend', themeToggle)
 
     const handleToggle = () => {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark'
@@ -97,6 +106,319 @@ function App() {
       themeToggle.removeEventListener('click', handleToggle)
       themeToggle.remove()
     }
+  }, [])
+
+  useEffect(() => {
+    const getStartedButton = document.querySelector('[data-cta="get-started"]')
+    const exploreButton = document.querySelector('[data-cta="explore-features"]')
+    const featuresSection = document.getElementById('features')
+    const screenshotsSection = document.getElementById('screenshots')
+
+    if (!getStartedButton || !exploreButton || !featuresSection || !screenshotsSection) {
+      return undefined
+    }
+
+    const demoSteps = {
+      chat: {
+        kicker: 'Step 01 · Chat',
+        title: 'Real-time conversations that feel alive',
+        body: 'Open with the heart of the product: chats, live previews, and the small motion details that make VSChat feel responsive.',
+        chips: ['Instant replies', 'Typing cues', 'Smart search'],
+      },
+      calls: {
+        kicker: 'Step 02 · Calls',
+        title: 'Clear voice and video, right inside the flow',
+        body: 'Switch into voice or video without breaking the experience. The tour highlights how calling stays quick, direct, and easy to reach.',
+        chips: ['Voice call', 'Video call', 'Group ready'],
+      },
+      media: {
+        kicker: 'Step 03 · Media',
+        title: 'Share photos, video, and documents naturally',
+        body: 'Finish with the parts that make VSChat feel complete: media sharing, notifications, and secure cross-device communication.',
+        chips: ['Photos', 'Videos', 'Documents'],
+      },
+    }
+
+    const scrollToSection = (sectionId) => {
+      const target = document.getElementById(sectionId)
+
+      if (!target) {
+        return
+      }
+
+      window.scrollTo({
+        top: target.offsetTop - 70,
+        behavior: 'smooth',
+      })
+    }
+
+    const demoOverlay = document.createElement('div')
+    demoOverlay.className = 'demo-overlay'
+    demoOverlay.id = 'product-tour'
+    demoOverlay.setAttribute('aria-hidden', 'true')
+    demoOverlay.innerHTML = `
+      <div class="demo-backdrop" data-demo-close></div>
+      <div class="demo-panel" role="dialog" aria-modal="true" aria-labelledby="productTourTitle">
+        <button type="button" class="demo-close" aria-label="Close guided demo" data-demo-close>×</button>
+        <div class="demo-header">
+          <span class="eyebrow"><span class="dot"></span> Interactive tour</span>
+          <h2 id="productTourTitle">See how VSChat comes alive</h2>
+          <p>Choose a path below, then jump straight to the part of the experience you want to explore.</p>
+        </div>
+        <div class="demo-tabs" role="tablist" aria-label="Demo steps">
+          <button type="button" class="demo-tab is-active" data-demo-step="chat">Chat</button>
+          <button type="button" class="demo-tab" data-demo-step="calls">Calls</button>
+          <button type="button" class="demo-tab" data-demo-step="media">Media</button>
+        </div>
+        <div class="demo-layout">
+          <div class="demo-visual">
+            <div class="demo-view is-active" data-demo-panel="chat">
+              <div class="demo-phone-shell">
+                <div class="demo-phone-top">
+                  <span>Live chat</span>
+                  <span class="demo-live">Messaging</span>
+                </div>
+                <div class="demo-chat-stack">
+                  <div class="demo-chat-row">
+                    <div class="demo-avatar a">EW</div>
+                    <div>
+                      <strong>Emma Watson</strong>
+                      <span>Hey! How are you?</span>
+                    </div>
+                  </div>
+                  <div class="demo-chat-row outgoing">
+                    <div class="demo-avatar b">You</div>
+                    <div>
+                      <strong>You</strong>
+                      <span>Doing great. Want to catch up later?</span>
+                    </div>
+                  </div>
+                  <div class="demo-chat-row">
+                    <div class="demo-avatar c">FG</div>
+                    <div>
+                      <strong>Friends Group</strong>
+                      <span>John: See you soon!</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-view" data-demo-panel="calls">
+              <div class="demo-phone-shell">
+                <div class="demo-phone-top">
+                  <span>Group call</span>
+                  <span class="demo-live">04:16</span>
+                </div>
+                <div class="demo-call-grid">
+                  <div class="demo-call-tile">JM</div>
+                  <div class="demo-call-tile">AL</div>
+                  <div class="demo-call-tile">RK</div>
+                  <div class="demo-call-tile">SP</div>
+                </div>
+                <div class="demo-call-controls">
+                  <span>Mic</span>
+                  <span>Video</span>
+                  <span>Share</span>
+                  <span class="end">End</span>
+                </div>
+              </div>
+            </div>
+            <div class="demo-view" data-demo-panel="media">
+              <div class="demo-phone-shell">
+                <div class="demo-phone-top">
+                  <span>Media library</span>
+                  <span class="demo-live">Secure</span>
+                </div>
+                <div class="demo-media-grid">
+                  <div class="demo-media-tile tile-a"></div>
+                  <div class="demo-media-tile tile-b"></div>
+                  <div class="demo-media-tile tile-c"></div>
+                  <div class="demo-media-tile tile-d"></div>
+                  <div class="demo-media-tile tile-e"></div>
+                  <div class="demo-media-tile tile-f"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-story">
+            <span class="demo-kicker" data-demo-kicker>Step 01 · Chat</span>
+            <h3 data-demo-title>Real-time conversations that feel alive</h3>
+            <p data-demo-body>Open with the heart of the product: chats, live previews, and the small motion details that make VSChat feel responsive.</p>
+            <div class="demo-chip-row" aria-label="Tour highlights">
+              <span class="demo-chip" data-demo-chip>Instant replies</span>
+              <span class="demo-chip" data-demo-chip>Typing cues</span>
+              <span class="demo-chip" data-demo-chip>Smart search</span>
+            </div>
+            <div class="demo-actions">
+              <button type="button" class="btn btn-primary demo-action" data-demo-jump="features">Jump to Features</button>
+              <button type="button" class="btn btn-ghost demo-action" data-demo-jump="screenshots">View Screenshots</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+    document.body.appendChild(demoOverlay)
+
+    const demoPanel = demoOverlay.querySelector('.demo-panel')
+    const demoTabs = Array.from(demoOverlay.querySelectorAll('[data-demo-step]'))
+    const demoViews = Array.from(demoOverlay.querySelectorAll('[data-demo-panel]'))
+    const demoKicker = demoOverlay.querySelector('[data-demo-kicker]')
+    const demoTitle = demoOverlay.querySelector('[data-demo-title]')
+    const demoBody = demoOverlay.querySelector('[data-demo-body]')
+    const demoChips = Array.from(demoOverlay.querySelectorAll('[data-demo-chip]'))
+    const demoDismissTargets = Array.from(demoOverlay.querySelectorAll('[data-demo-close]'))
+
+    let focusTimer = null
+    let highlightTimer = null
+    let activeTrigger = null
+
+    const setDemoStep = (step) => {
+      const demoStep = demoSteps[step] ?? demoSteps.chat
+
+      demoTabs.forEach((button) => {
+        button.classList.toggle('is-active', button.dataset.demoStep === step)
+      })
+
+      demoViews.forEach((view) => {
+        view.classList.toggle('is-active', view.dataset.demoPanel === step)
+      })
+
+      if (demoKicker) {
+        demoKicker.textContent = demoStep.kicker
+      }
+
+      if (demoTitle) {
+        demoTitle.textContent = demoStep.title
+      }
+
+      if (demoBody) {
+        demoBody.textContent = demoStep.body
+      }
+
+      demoChips.forEach((chip, index) => {
+        const label = demoStep.chips[index] ?? ''
+        chip.textContent = label
+        chip.hidden = !label
+      })
+    }
+
+    const openDemo = (step = 'chat') => {
+      activeTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null
+      setDemoStep(step)
+      demoOverlay.classList.add('is-open')
+      demoOverlay.setAttribute('aria-hidden', 'false')
+      document.body.classList.add('no-scroll')
+
+      window.requestAnimationFrame(() => {
+        demoOverlay.querySelector('.demo-close')?.focus()
+      })
+    }
+
+    const closeDemo = () => {
+      if (!demoOverlay.classList.contains('is-open')) {
+        return
+      }
+
+      demoOverlay.classList.remove('is-open')
+      demoOverlay.setAttribute('aria-hidden', 'true')
+      document.body.classList.remove('no-scroll')
+
+      if (focusTimer) {
+        window.clearTimeout(focusTimer)
+      }
+
+      focusTimer = window.setTimeout(() => {
+        activeTrigger?.focus?.()
+      }, 0)
+    }
+
+    const handleGetStarted = (event) => {
+      event.preventDefault()
+      openDemo('chat')
+    }
+
+    const handleExplore = (event) => {
+      event.preventDefault()
+      if (demoOverlay.classList.contains('is-open')) {
+        demoOverlay.classList.remove('is-open')
+        demoOverlay.setAttribute('aria-hidden', 'true')
+        document.body.classList.remove('no-scroll')
+      }
+
+      if (focusTimer) {
+        window.clearTimeout(focusTimer)
+      }
+
+      scrollToSection('features')
+      featuresSection.classList.add('demo-highlight')
+
+      if (highlightTimer) {
+        window.clearTimeout(highlightTimer)
+      }
+
+      highlightTimer = window.setTimeout(() => {
+        featuresSection.classList.remove('demo-highlight')
+      }, 1600)
+    }
+
+    const handleDemoClick = (event) => {
+      const target = event.target
+
+      if (!(target instanceof Element)) {
+        return
+      }
+
+      const closeButton = target.closest('[data-demo-close]')
+      if (closeButton) {
+        event.preventDefault()
+        closeDemo()
+        return
+      }
+
+      const tabButton = target.closest('[data-demo-step]')
+      if (tabButton instanceof HTMLElement && tabButton.dataset.demoStep) {
+        setDemoStep(tabButton.dataset.demoStep)
+        return
+      }
+
+      const jumpButton = target.closest('[data-demo-jump]')
+      if (jumpButton instanceof HTMLElement && jumpButton.dataset.demoJump) {
+        event.preventDefault()
+        closeDemo()
+        scrollToSection(jumpButton.dataset.demoJump)
+      }
+    }
+
+    const handleKeydown = (event) => {
+      if (event.key === 'Escape') {
+        closeDemo()
+      }
+    }
+
+    getStartedButton.addEventListener('click', handleGetStarted)
+    exploreButton.addEventListener('click', handleExplore)
+    demoOverlay.addEventListener('click', handleDemoClick)
+    window.addEventListener('keydown', handleKeydown)
+
+    setDemoStep('chat')
+
+    const cleanupDemo = () => {
+      getStartedButton.removeEventListener('click', handleGetStarted)
+      exploreButton.removeEventListener('click', handleExplore)
+      demoOverlay.removeEventListener('click', handleDemoClick)
+      window.removeEventListener('keydown', handleKeydown)
+      document.body.classList.remove('no-scroll')
+      if (focusTimer) {
+        window.clearTimeout(focusTimer)
+      }
+      if (highlightTimer) {
+        window.clearTimeout(highlightTimer)
+      }
+      demoOverlay.remove()
+      featuresSection.classList.remove('demo-highlight')
+    }
+
+    return cleanupDemo
   }, [])
 
   useEffect(() => {
