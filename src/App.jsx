@@ -153,7 +153,10 @@ function App() {
     }
 
     const tourUrl = '/get-started-tour.html'
-    const currentTheme = document.documentElement.dataset.theme || 'light'
+    const getCurrentTheme = () => {
+      const theme = document.documentElement.dataset.theme
+      return theme === 'dark' ? 'dark' : 'light'
+    }
 
     let highlightTimer = null
     let tourOverlay = null
@@ -201,7 +204,7 @@ function App() {
 
       const demoFrame = tourOverlay.querySelector('.demo-frame')
       if (demoFrame instanceof HTMLIFrameElement) {
-        demoFrame.src = `${tourUrl}?theme=${encodeURIComponent(currentTheme)}`
+        demoFrame.src = `${tourUrl}?theme=${encodeURIComponent(getCurrentTheme())}`
       }
 
       tourOverlay.classList.add('is-open')
