@@ -534,28 +534,46 @@ function App() {
                       <span>Your Name</span>
                       <div class="contact-field contact-input contact-field-row">
                         <span class="contact-field-icon"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
-                        <input type="text" placeholder="Your Name" />
+                        <input type="text" name="name" placeholder="Your Name" required />
                       </div>
                     </label>
                     <label class="contact-field-wrap">
                       <span>Your Email</span>
                       <div class="contact-field contact-input contact-field-row">
                         <span class="contact-field-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-                        <input type="email" placeholder="Your Email" />
+                        <input type="email" name="email" placeholder="Your Email" required />
                       </div>
                     </label>
                     <label class="contact-field-wrap">
                       <span>Your Message</span>
                       <div class="contact-field contact-field-lg contact-textarea contact-message-row">
                         <span class="contact-field-icon contact-field-icon-top"><svg viewBox="0 0 24 24"><path d="M13.5 6.5 5 15l-1 5 5-1 8.5-8.5z"/><path d="m12 8 4 4"/></svg></span>
-                        <textarea rows="5" placeholder="Your Message"></textarea>
+                        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
                       </div>
                     </label>
-                    <button type="button" class="contact-send contact-send-large">
+                    <button type="submit" class="contact-send contact-send-large">
                       <span class="contact-send-icon"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>
                       Send Message
                     </button>
                   </form>
+                  <div class="contact-success" aria-live="polite">
+                    <div class="contact-success-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 6.5 12 13l9-6.5" />
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <circle cx="18" cy="18" r="4" />
+                        <path d="m16.5 18 1 1 2-2" />
+                      </svg>
+                    </div>
+                    <div class="contact-success-copy">
+                      <strong>Message Sent Successfully!</strong>
+                      <p>Thank you for reaching out.<br />We’ll get back to you soon.</p>
+                    </div>
+                    <button type="button" class="contact-send contact-send-again">
+                      <span class="contact-send-icon"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-7z"/></svg></span>
+                      Send Another Message
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -571,8 +589,9 @@ function App() {
 
       const contactForm = contactSection.querySelector('.contact-form')
       const contactPhone = contactSection.querySelector('.contact-phone')
+      const contactScreen = contactSection.querySelector('.contact-phone-screen')
       const contactSuccess = contactSection.querySelector('.contact-success')
-      const contactSend = contactSection.querySelector('.contact-send')
+      const contactSendAgain = contactSection.querySelector('.contact-send-again')
       const contactFields = Array.from(contactSection.querySelectorAll('.contact-field-wrap'))
       let contactSuccessTimer = null
 
@@ -619,10 +638,45 @@ function App() {
         }, 1200)
       }
 
+      const handleContactSubmit = async (event) => {
+        event.preventDefault()
+
+        if (!contactForm?.reportValidity()) {
+          return
+        }
+
+        const formData = new FormData(contactForm)
+        formData.append('access_key', 'a4469635-a3d9-403c-b71a-cdc6879612fd')
+
+        try {
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData,
+          })
+          const data = await response.json()
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || 'The contact form submission failed.')
+          }
+
+          contactScreen?.classList.add('is-success')
+          handleContactSend()
+        } catch (error) {
+          console.error('Unable to send contact form message.', error)
+        }
+      }
+
+      const handleContactSendAgain = () => {
+        contactForm?.reset()
+        contactScreen?.classList.remove('is-success')
+        syncContactFields()
+      }
+
       contactForm?.addEventListener('input', handleContactInput)
       contactForm?.addEventListener('focusin', handleContactFocusIn)
       contactForm?.addEventListener('focusout', handleContactFocusOut)
-      contactSend?.addEventListener('click', handleContactSend)
+      contactForm?.addEventListener('submit', handleContactSubmit)
+      contactSendAgain?.addEventListener('click', handleContactSendAgain)
       syncContactFields()
 
       const contactRevealItems = contactSection.querySelectorAll('.reveal')
@@ -643,7 +697,8 @@ function App() {
         contactForm?.removeEventListener('input', handleContactInput)
         contactForm?.removeEventListener('focusin', handleContactFocusIn)
         contactForm?.removeEventListener('focusout', handleContactFocusOut)
-        contactSend?.removeEventListener('click', handleContactSend)
+        contactForm?.removeEventListener('submit', handleContactSubmit)
+        contactSendAgain?.removeEventListener('click', handleContactSendAgain)
         if (contactSuccessTimer) {
           window.clearTimeout(contactSuccessTimer)
         }
@@ -1041,4 +1096,3 @@ function App() {
 }
 
 export default App
-

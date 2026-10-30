@@ -3283,6 +3283,66 @@ body.no-scroll{
   overflow:hidden;
 }
 
+.contact-phone-screen.is-success .contact-form{
+  display:none;
+}
+.contact-phone-screen.is-success .contact-success{
+  min-height:370px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:18px 10px 10px;
+  text-align:center;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+.contact-success-icon{
+  width:112px;
+  height:112px;
+  border:2px solid rgba(34,197,94,.55);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--green);
+  background:radial-gradient(circle,rgba(34,197,94,.16),rgba(34,197,94,.04) 62%,transparent 70%);
+  box-shadow:0 0 0 12px rgba(34,197,94,.04);
+}
+.contact-success-icon svg{
+  width:72px;
+  height:72px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.contact-success-icon circle{
+  fill:var(--green);
+  stroke:none;
+}
+.contact-success-icon circle + path{
+  color:#fff;
+  stroke-width:2;
+}
+.contact-phone-screen.is-success .contact-success-copy strong{
+  color:var(--green);
+  font-size:17px;
+  margin-bottom:8px;
+}
+.contact-phone-screen.is-success .contact-success-copy p{
+  color:#718096;
+  font-size:12px;
+  line-height:1.55;
+}
+.contact-phone-screen.is-success .contact-send-again{
+  margin-top:16px;
+}
+
+
 .demo-highlight{
   box-shadow:0 0 0 1px rgba(34,197,94,.18), 0 0 0 14px rgba(34,197,94,.05);
   border-radius:28px;
