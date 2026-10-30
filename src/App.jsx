@@ -35,6 +35,35 @@ function App() {
   ).replace(
     `<p>Connect. Chat. Communicate.</p>`,
     `<p>Connect, chat, and communicate with ease using VSChat, a simple and secure platform built to keep people closer every day.</p>`,
+  ).replace(
+    `<div>
+        <h5>Contact Us</h5>
+        <ul>
+          <li><span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span> vikram.shewale@gmail.com</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span> +91 9325885005</li>
+          <li><span class="icon" style="margin-top:2px;"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span> SHEWALE CENTER, SNO 22/2, CTS 4691, NR. JUDSON SCHOOL, Opposite P.C.M.C. Corporation, Pimpri, Pune, Maharashtra – 411018</li>
+        </ul>
+        <div class="social-row">
+          <a href="#" title="LinkedIn"><span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/><path d="M10 9v12M10 13a4 4 0 0 1 8 0v8"/></svg></span></a>
+          <a href="#" title="GitHub"><span class="icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span></a>
+          <a href="#" title="X"><span class="icon"><svg viewBox="0 0 24 24"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></span></a>
+          <a href="#" title="Instagram"><span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></span></a>
+        </div>
+      </div>`,
+    `<div class="footer-connect">
+        <h5>Stay Connected</h5>
+        <p>Follow VSChat and stay updated with what's new.</p>
+        <div class="social-row">
+          <div class="footer-community-card">
+            <span class="footer-community-orbit" aria-hidden="true"><span></span></span>
+            <div>
+              <strong>Always in sync</strong>
+              <span>Good conversations start here.</span>
+            </div>
+          </div>
+        </div>
+        <a class="footer-connect-action" href="#contact">Stay in touch</a>
+      </div>`,
   )
 
   useEffect(() => {

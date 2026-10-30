@@ -2989,6 +2989,86 @@ footer{padding:70px 0 30px;}
 }
 .social-row a .icon{width:15px; height:15px;}
 .social-row a:hover{transform:translateY(-4px); background:var(--green); color:#fff;}
+.footer-connect p{
+  max-width:260px;
+  margin:0;
+  color:var(--slate);
+  font-size:14px;
+  line-height:1.55;
+}
+.footer-connect .social-row{
+  margin-top:12px;
+}
+.footer-community-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  max-width:270px;
+  padding:12px 14px;
+  border:1px solid rgba(34,197,94,.18);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(34,197,94,.03));
+}
+.footer-community-card strong,
+.footer-community-card span{
+  display:block;
+}
+.footer-community-card strong{
+  color:var(--ink);
+  font-size:13px;
+  margin-bottom:3px;
+}
+.footer-community-card div span{
+  color:var(--slate);
+  font-size:11px;
+}
+.footer-community-orbit{
+  position:relative;
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border:1px solid rgba(34,197,94,.35);
+  border-radius:50%;
+}
+.footer-community-orbit::before,
+.footer-community-orbit::after,
+.footer-community-orbit span{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:7px;
+  height:7px;
+  margin:-3.5px;
+  border-radius:50%;
+  background:var(--green);
+}
+.footer-community-orbit::before{
+  transform:translate(-11px,-6px);
+  opacity:.55;
+}
+.footer-community-orbit::after{
+  transform:translate(10px,7px);
+  opacity:.72;
+}
+.footer-community-orbit span{
+  box-shadow:0 0 0 5px rgba(34,197,94,.12),0 0 16px rgba(34,197,94,.55);
+}
+.footer-connect-action{
+  display:inline-flex;
+  margin-top:12px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(34,197,94,.14);
+  color:#07883d;
+  font-size:14px;
+  font-weight:700;
+  transition:background .25s, color .25s;
+}
+.footer-connect-action:hover{
+  background:var(--green);
+  color:#fff;
+}
 .footer-bottom{border-top:1px solid var(--line); padding-top:22px; text-align:center; color:var(--slate); font-size:13px;}
 
 :root[data-theme='dark'] header{
